@@ -75,6 +75,8 @@ that sets the buffer name accordingly.  Uses `agent-shell-start' for
 named agents, or `agent-shell' for unnamed ones."
   (if buffer-name
       (let* ((base-config (or (agent-shell--resolve-preferred-config)
+                              (seq-find (lambda (c) (eq (map-elt c :identifier) 'claude-code))
+                                        agent-shell-agent-configs)
                               (car agent-shell-agent-configs)))
              (named-config (append `((:buffer-name . ,buffer-name)) base-config)))
         (agent-shell-start :config named-config))
