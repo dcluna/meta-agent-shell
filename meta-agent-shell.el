@@ -67,9 +67,23 @@ If you've messaged the meta session within this time, heartbeat is delayed."
   :type 'string
   :group 'meta-agent-shell)
 
-(defcustom meta-agent-shell-start-function #'agent-shell
+(defun meta-agent-shell--start-agent (&optional _arg buffer-name)
+  "Start a new agent-shell session, optionally named BUFFER-NAME.
+_ARG is accepted for compatibility but ignored.
+When BUFFER-NAME is provided, the session is started with a config
+that sets the buffer name accordingly.  Uses `agent-shell-start' for
+named agents, or `agent-shell' for unnamed ones."
+  (if buffer-name
+      (let* ((base-config (or (agent-shell--resolve-preferred-config)
+                              (car agent-shell-agent-configs)))
+             (named-config (append `((:buffer-name . ,buffer-name)) base-config)))
+        (agent-shell-start :config named-config))
+    (agent-shell)))
+
+(defcustom meta-agent-shell-start-function #'meta-agent-shell--start-agent
   "Function to start a new agent-shell session.
-Should accept optional BUFFER-NAME as second argument for named agents."
+Should accept optional ARG and BUFFER-NAME as arguments.
+When BUFFER-NAME is non-nil, the session buffer should be named accordingly."
   :type 'function
   :group 'meta-agent-shell)
 

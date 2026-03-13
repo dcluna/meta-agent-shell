@@ -22,9 +22,22 @@
 ;; These provide minimal definitions so the file can load in batch mode
 (unless (featurep 'agent-shell)
   (provide 'agent-shell)
-  (defun agent-shell (&optional _prefix _buffer-name)
-    "Stub for agent-shell."
+  (defun agent-shell (&optional _prefix)
+    "Stub for agent-shell.
+Matches real signature: only accepts optional prefix arg, no buffer-name."
     (get-buffer-create "*agent-shell*"))
+  (cl-defun agent-shell-start (&key config outgoing-request-decorator)
+    "Stub for agent-shell-start."
+    (ignore outgoing-request-decorator)
+    (let ((buf-name (or (alist-get :buffer-name config) "*agent-shell*")))
+      (get-buffer-create buf-name)))
+  (defun agent-shell--resolve-preferred-config ()
+    "Stub returning nil."
+    nil)
+  (defvar agent-shell-agent-configs
+    (list '((:identifier . claude-code)
+            (:buffer-name . "Claude Code")))
+    "Stub agent configs.")
   (defun agent-shell-buffers ()
     "Stub returning empty list."
     nil)
