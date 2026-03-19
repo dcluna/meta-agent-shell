@@ -79,7 +79,10 @@ named agents, or `agent-shell' for unnamed ones."
                                         agent-shell-agent-configs)
                               (car agent-shell-agent-configs)))
              (named-config (append `((:buffer-name . ,buffer-name)) base-config)))
-        (agent-shell-start :config named-config))
+        (agent-shell--start :config named-config
+                            :no-focus nil
+                            :new-session t
+                            :session-strategy 'new-deferred))
     (agent-shell)))
 
 (defcustom meta-agent-shell-start-function #'meta-agent-shell--start-agent
